@@ -6,7 +6,7 @@ submissiontype: IETF
 area: Applications
 wg: EXTRA
 
-docname: draft-gulbrandsen-6855bis-00
+docname: draft-ietf-extra-6855bis-00
 
 title: IMAP Support for UTF-8
 abbrev: UTF8=ACCEPT
@@ -28,12 +28,13 @@ author:
   code: AA 91016<
   country: US
   email: chris.newman@oracle.com
-- name: Sean Shen
+- name: Jiankang Yao
   org: CNNIC
   street: No.4 South 4th Zhongguancun Street
   city: Beijing
   code: 100190
   country: China
+  email: yaojk@cnnic.cn
 - name: Arnt Gulbrandsen
   org: ICANN
   street: 6 Rond Point Schumann, Bd. 1
@@ -131,17 +132,17 @@ string sent by the client.  When the IMAP server supports
 "UTF8=ACCEPT", it supports UTF-8 in quoted-strings with the following
 syntax:
 
-         quoted        =/ DQUOTE *uQUOTED-CHAR DQUOTE
-                ; QUOTED-CHAR is not modified, as it will affect
-                ; other RFC 3501 ABNF non-terminals.
+   quoted        =/ DQUOTE *uQUOTED-CHAR DQUOTE
+          ; QUOTED-CHAR is not modified, as it will affect
+          ; other RFC 3501 ABNF non-terminals.
 
-         uQUOTED-CHAR  = QUOTED-CHAR / UTF8-2 / UTF8-3 / UTF8-4
+   uQUOTED-CHAR  = QUOTED-CHAR / UTF8-2 / UTF8-3 / UTF8-4
 
-         UTF8-2        =   <Defined in Section 4 of RFC 3629>
+   UTF8-2        =   <Defined in Section 4 of RFC 3629>
 
-         UTF8-3        =   <Defined in Section 4 of RFC 3629>
+   UTF8-3        =   <Defined in Section 4 of RFC 3629>
 
-         UTF8-4        =   <Defined in Section 4 of RFC 3629>
+   UTF8-4        =   <Defined in Section 4 of RFC 3629>
 
 When this extended quoting mechanism is used by the client, the
 server MUST reject, with a "BAD" response, any octet sequences with
@@ -198,6 +199,27 @@ guarantee that the user provisioning system utilized by the IMAP
 server will allow such identities.  This is an implementation
 decision and may depend on what identity system the IMAP server is
 configured to use.
+
+# FETCH BODYSTRUCTURE and message/global
+
+{{RFC9051}} section 7.5.2 treats message/global like message/rfc,
+which means that for some messages, the response to FETCH
+BODYSTRUCTURE varies depending on whether IMAP4rev1 or IMAP4rev2 is
+in use.
+
+{{RFC6855}} does not extend {{RFC3501}} in this respect. This document
+extends the media-message ABNF production to match {{RFC9051}}.
+
+   media-message   = DQUOTE "MESSAGE" DQUOTE SP
+                     DQUOTE ("RFC822" / "GLOBAL") DQUOTE
+
+When IMAP4rev1 and UTF8=ACCEPT has been enabled, the server MAY treat
+message/global like message/rfc822 when computing the body structure,
+but MAY also treat it as described in {{RFC3501}}. Clients MUST accept
+both cases.
+
+When IMAP4rev1 and UTF8=ACCEPT are in use, the server MUST behave as
+described in {{RFC9051}}.
 
 # "UTF8=ONLY" Capability
 
@@ -331,7 +353,7 @@ issues are discussed in Section 7.
 
 --- back
 
-# Appendix A.  Design Rationale
+# Design Rationale
 
 This non-normative section discusses the reasons behind some of the
 design choices in this specification.
@@ -344,7 +366,17 @@ legacy clients.  However, the difficulty of diagnosing
 interoperability problems caused by a "just-send-UTF-8 IMAP" mechanism
 is the reason the "UTF8=ONLY" capability mechanism was chosen.
 
-# Appendix B.  Acknowledgments
+# Acknowledgments
+
+This document is an almost unchanged copy of {{RFC6855}}, which was
+written by Pete Resnick, Chris Newman and Sean Shen. Sean has since
+changed jobs and the current authors do not have a new email address
+for him. We cannot be sure that he would approve of the changes in
+this document, so we did not list him as author, but do gratefully
+acknowledge his work on {{RFC6855}}. Jiankang Yao replaces him.
+
+The next paragraph is a straight copy of the acknowlegements in
+{{RFC6855}}:
 
 The authors wish to thank the participants of the EAI working group
 for their contributions to this document, with particular thanks to
@@ -353,10 +385,12 @@ Kari Hurtta, John Klensin, Xiaodong Lee, Charles Lindsey, Alexey
 Melnikov, Subramanian Moonesamy, Shawn Steele, Daniel Taharlev, and
 Joseph Yee for their specific contributions to the discussion.
 
-# Appendix B.  Changes since RFC 6855
+# Changes since RFC 6855
 
 This non-normative section describes the changes made since
 {{RFC6855}}.
+
+## APPEND UTF8
 
 This document removes APPEND's UTF8 data item, making the UTF8-related
 syntax compatible with IMAP4rev2 as defined by {{RFC9051}} and making
@@ -377,5 +411,22 @@ the UTF8 data item, and that client uses it incorrectly (it sends the
 data item for all messages if the server supports UTF8=ACCEPT, without
 regard to whether a particular message includes any UTF8 at all).
 
-For these reason, it was judged best to revise {{RFC6855}} and adopt
+For these reasons, it was judged best to revise {{RFC6855}} and adopt
 the same syntax as IMAP4rev2.
+
+## FETCH BODYSTRUCTURE
+
+{{RFC6532}} defines a new MIME type, message/global, which is
+substantially like message/rfc822 except that the submessage may
+(also) use the syntax defined in {{RFC6532}}. {{RFC3501}} and
+{{RFC3501}} define a FETCH item to return the MIME structure of a
+message, which servers usually compute once and store.
+
+None of the RFCs point out to implementers that IMAP4rev1 and
+Imap4rev2 are slighly different, so storing the BODYSTRUCTURE in the
+way servers and clients often do can easily lead to problems.
+
+This document makes the syntax optional, making it simple for server
+authors to implement this extension correctly. This implies that
+clients need to parse and handle both varieties, which they need to do
+anyway if they want to support both IMAP4rev1 and IMAP4rev2.
