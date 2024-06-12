@@ -6,7 +6,7 @@ submissiontype: IETF
 area: Applications
 wg: EXTRA
 
-docname: draft-ietf-extra-6855bis-00
+docname: draft-ietf-extra-6855bis-01
 
 title: IMAP Support for UTF-8
 abbrev: UTF8=ACCEPT
@@ -25,7 +25,7 @@ author:
   org: Oracle
   street: 800 Royal Oaks
   city: Monrovia,
-  code: AA 91016<
+  code: AA 91016
   country: US
   email: chris.newman@oracle.com
 - name: Jiankang Yao
@@ -333,9 +333,15 @@ discussed in Section 7.
 
 # IANA Considerations {#IANA}
 
-the "IMAP 4 Capabilities" registry contains a number of
-references to RFC6855. IANA, please change them to point to this
-document.
+the "IMAP 4 Capabilities" registry contains a number of references to
+RFC6855. IANA, please change them to point to this document instead of
+RFC6855. The affected references are:
+
+* UTF8=ACCEPT
+* UTF8=ALL (OBSOLETE)
+* UTF8=APPEND (OBSOLETE)
+* UTF8=ONLY
+* UTF8=USER (OBSOLETE)
 
 # Security Considerations {#SECURITY}
 
