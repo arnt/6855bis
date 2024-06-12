@@ -6,7 +6,7 @@ submissiontype: IETF
 area: Applications
 wg: EXTRA
 
-docname: draft-ietf-extra-6855bis-01
+docname: draft-ietf-extra-6855bis-02
 
 title: IMAP Support for UTF-8
 abbrev: UTF8=ACCEPT
@@ -218,7 +218,7 @@ message/global like message/rfc822 when computing the body structure,
 but MAY also treat it as described in {{RFC3501}}. Clients MUST accept
 both cases.
 
-When IMAP4rev1 and UTF8=ACCEPT are in use, the server MUST behave as
+When IMAP4rev2 and UTF8=ACCEPT are in use, the server MUST behave as
 described in {{RFC9051}}.
 
 # "UTF8=ONLY" Capability
@@ -425,11 +425,11 @@ the same syntax as IMAP4rev2.
 {{RFC6532}} defines a new MIME type, message/global, which is
 substantially like message/rfc822 except that the submessage may
 (also) use the syntax defined in {{RFC6532}}. {{RFC3501}} and
-{{RFC3501}} define a FETCH item to return the MIME structure of a
+{{RFC3051}} define a FETCH item to return the MIME structure of a
 message, which servers usually compute once and store.
 
 None of the RFCs point out to implementers that IMAP4rev1 and
-Imap4rev2 are slighly different, so storing the BODYSTRUCTURE in the
+IMAP4rev2 are slighly different, so storing the BODYSTRUCTURE in the
 way servers and clients often do can easily lead to problems.
 
 This document makes the syntax optional, making it simple for server
