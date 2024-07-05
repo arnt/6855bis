@@ -5,8 +5,9 @@ cat: std
 submissiontype: IETF
 area: Applications
 wg: EXTRA
+obsoletes: 6855
 
-docname: draft-ietf-extra-6855bis-02
+docname: draft-ietf-extra-6855bis-03
 
 title: IMAP Support for UTF-8
 abbrev: UTF8=ACCEPT
@@ -15,12 +16,12 @@ kw:
   - IMAP
 author:
 - name: Pete Resnick
-  org: Qualcomm Incorporated
-  street: 5775 Morehouse Drive
-  city: San Diego
-  code: CA 92121-1714
+  org: Episteme Technology Consulting LLC
+  street: 503 West Indiana Avenue
+  city: Urbana
+  code: IL 61801-4941
   country: US
-  email: presnick@qualcomm.com
+  email: resnick@episteme.net
 - name: Chris Newman
   org: Oracle
   street: 800 Royal Oaks
@@ -425,7 +426,7 @@ the same syntax as IMAP4rev2.
 {{RFC6532}} defines a new MIME type, message/global, which is
 substantially like message/rfc822 except that the submessage may
 (also) use the syntax defined in {{RFC6532}}. {{RFC3501}} and
-{{RFC3051}} define a FETCH item to return the MIME structure of a
+{{RFC9051}} define a FETCH item to return the MIME structure of a
 message, which servers usually compute once and store.
 
 None of the RFCs point out to implementers that IMAP4rev1 and
